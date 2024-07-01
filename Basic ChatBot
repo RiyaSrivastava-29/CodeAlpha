@@ -1,0 +1,34 @@
+import re
+
+# Define the chatbot's responses
+responses = {
+    R"hi|hello|hey": "Hello! How can I assist you today?",
+    R"what is your name": "My name is Chatbot.",
+    R"how are you": "I'm doing well, thank you for asking!",
+    R"goodbye|bye": "Goodbye! Have a great day.",
+    R"thank you|thanks": "You're welcome!",
+    R"who created you": "I am created by riya.",
+    R"what can you do": "I'm an AI assistant, so I can help with a variety of tasks like answering questions, providing information, and assisting with analysis and research.",
+    R"tell me a joke": "Okay, here's a good one: Why don't scientists trust atoms? Because they make up everything!",
+    R"what is the weather like": "Unfortunately, I don't have access to real-time weather information. I'm an AI assistant without direct access to weather data.",
+    R".*": "I'm sorry, I didn't understand that. Could you please rephrase your question?"
+}
+
+def chatbot_response(user_input):
+    for pattern, response in responses.items():
+        if re.search(pattern, user_input, re.IGNORECASE):
+            return response
+    return "I'm sorry, I didn't understand that. Could you please rephrase your question?"
+
+def main():
+    print("Welcome to the chatbot! Type 'bye' to exit.")
+    while True:
+        user_input = input("Human: ")
+        if user_input.lower() == "bye":
+            print("Chatbot: Goodbye! Have a great day.")
+            break
+        response = chatbot_response(user_input)
+        print("Chatbot:", response)
+
+if __name__ == "__main__":
+    main()
