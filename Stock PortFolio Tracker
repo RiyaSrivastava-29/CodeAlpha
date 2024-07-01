@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_STOCKS 100
+
+typedef struct {
+    char symbol[10];
+    int shares;
+    double price_per_share;
+} Stock;
+
+typedef struct {
+    Stock stocks[MAX_STOCKS];
+    int num_stocks;
+} Portfolio;
+
+void add_stock(Portfolio *portfolio, char *symbol, int shares, double price_per_share) {
+    if (portfolio->num_stocks >= MAX_STOCKS) {
+        printf("Error: Maximum number of stocks reached.\n");
+        return;
+    }
+
+    strcpy(portfolio->stocks[portfolio->num_stocks].symbol, symbol);
+    portfolio->stocks[portfolio->num_stocks].shares = shares;
+    portfolio->stocks[portfolio->num_stocks].price_per_share = price_per_share;
+    portfolio->num_stocks++;
+}
+
+void remove_stock(Portfolio *portfolio, char *symbol) {
+    int i, j;
+    for (i = 0; i < portfolio->num_stocks; i++) {
+        if (strcmp(portfolio->stocks[i].symbol, symbol) == 0) {
+            for (j = i; j < portfolio->num_stocks - 1; j++) {
+                portfolio->stocks[j] = portfolio->stocks[j + 1];
+            }
+            portfolio->num_stocks--;
+            printf("Removed stock: %s\n", symbol);
+            return;
+        }
+    }
+    printf("Error: Stock with symbol '%s' not found in the portfolio.\n", symbol);
+}
+
+double calculate_portfolio_value(Portfolio *portfolio) {
+    double total_value = 0.0;
+    for (int i = 0; i < portfolio->num_stocks; i++) {
+        total_value += portfolio->stocks[i].shares * portfolio->stocks[i].price_per_share;
+    }
+    return total_value;
+}
+
+void print_portfolio_status(Portfolio *portfolio) {
+    printf("Current Portfolio Status:\n");
+    for (int i = 0; i < portfolio->num_stocks; i++) {
+        double total_value = portfolio->stocks[i].shares * portfolio->stocks[i].price_per_share;
+        printf("%s: %d shares at $%.2f per share, total value: $%.2f\n",
+               portfolio->stocks[i].symbol, portfolio->stocks[i].shares,
+               portfolio->stocks[i].price_per_share, total_value);
+    }
+    double total_portfolio_value = calculate_portfolio_value(portfolio);
+    printf("Total Portfolio Value: $%.2f\n", total_portfolio_value);
+}
+
+int main() {
+    Portfolio portfolio;
+    portfolio.num_stocks = 0;
+
+    add_stock(&portfolio, "APPLE", 100, 120.50);
+    add_stock(&portfolio, "GOOGLE", 50, 2500.00);
+    add_stock(&portfolio, "TESLA", 25, 700.00);
+
+    print_portfolio_status(&portfolio);
+
+    remove_stock(&portfolio, "TSLA");
+
+    print_portfolio_status(&portfolio);
+
+    return 0;
+}
