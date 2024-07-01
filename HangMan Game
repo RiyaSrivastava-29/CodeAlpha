@@ -1,0 +1,54 @@
+import random
+
+# List of words to choose from
+words = ['sql' , 'python', 'javascript', 'java', 'ruby', 'react']
+
+# Choose a random word from the list
+word = random.choice(words)
+
+# Create a list of underscores for the word
+guesses = ['_'] * len(word)
+
+# Set the number of incorrect guesses allowed
+max_incorrect_guesses = 5
+
+# Keep track of the number of incorrect guesses
+incorrect_guesses = 0
+
+# Keep track of the letters that have been guessed
+guessed_letters = set()
+
+while True:
+    # Print the current state of the game
+    print(' '.join(guesses))
+    print(f'Incorrect guesses: {incorrect_guesses}/{max_incorrect_guesses}')
+    print(f'Guessed letters: {", ".join(sorted(guessed_letters))}')
+
+    # Get the user's guess
+    guess = input('Guess a letter: ').lower()
+
+    # Check if the letter has already been guessed
+    if guess in guessed_letters:
+        print('You already guessed that letter. Try again.')
+        continue
+
+    # Add the letter to the set of guessed letters
+    guessed_letters.add(guess)
+
+    # Check if the letter is in the word
+    if guess in word:
+        # Update the guesses list with the correctly guessed letters
+        for i in range(len(word)):
+            if word[i] == guess:
+                guesses[i] = guess
+    else:
+        # Increment the number of incorrect guesses
+        incorrect_guesses += 1
+
+    # Check if the game is over
+    if incorrect_guesses >= max_incorrect_guesses:
+        print(f'You lose! The word was {word}.')
+        break
+    elif '_' not in guesses:
+        print(f'You win! The word was {word}.')
+        break
